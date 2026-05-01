@@ -1,0 +1,24 @@
+--- REPORTE DE VENTAS - GENERADO: Wed Apr 29 21:08:33 CST 2026 ---
+ID: V-001 | VIP | Fila 0, Asiento 0 | Total: $1500.0
+ID: V-002 | VIP | Fila 0, Asiento 1 | Total: $1500.0
+ID: G-050 | General | Fila 4, Asiento 4 | Total: $400.0
+--- FIN DEL REPORTE ---
+
+--- REPORTE DE VENTAS - GENERADO: Wed Apr 29 21:11:14 CST 2026 ---
+ID: V-001 | VIP | Fila 0, Asiento 0 | Total: $1500.0
+ID: V-002 | VIP | Fila 0, Asiento 1 | Total: $1500.0
+ID: G-050 | General | Fila 4, Asiento 4 | Total: $400.0
+--- FIN DEL REPORTE ---
+
+--- REPORTE DE VENTAS - GENERADO: Wed Apr 29 21:11:21 CST 2026 ---
+ID: V-001 | VIP | Fila 0, Asiento 0 | Total: $1500.0
+ID: V-002 | VIP | Fila 0, Asiento 1 | Total: $1500.0
+ID: G-050 | General | Fila 4, Asiento 4 | Total: $400.0
+--- FIN DEL REPORTE ---
+
+--- REPORTE DE VENTAS - GENERADO: Wed Apr 29 21:15:29 CST 2026 ---
+ID: V-001 | VIP | Fila 0, Asiento 0 | Total: $1500.0
+ID: V-002 | VIP | Fila 0, Asiento 1 | Total: $1500.0
+ID: G-050 | General | Fila 4, Asiento 4 | Total: $400.0
+--- FIN DEL REPORTE ---
+
