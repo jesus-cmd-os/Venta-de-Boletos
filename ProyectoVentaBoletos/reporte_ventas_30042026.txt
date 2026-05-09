@@ -1,0 +1,6 @@
+}--- REPORTE DE VENTAS - GENERADO: Thu Apr 30 20:17:58 CST 2026 ---
+ID: V-001 | VIP | Fila 0, Asiento 0 | Total: $1500.0
+ID: V-002 | VIP | Fila 0, Asiento 1 | Total: $1500.0
+ID: G-050 | General | Fila 4, Asiento 4 | Total: $400.0
+--- FIN DEL REPORTE ---
+
