@@ -1,0 +1,37 @@
+--- REPORTE DE VENTAS - GENERADO: Sat May 09 14:56:11 CST 2026 ---
+ID: V-001 | VIP | Fila 0, Asiento 0 | Total: $1500.0
+ID: V-002 | VIP | Fila 0, Asiento 1 | Total: $1500.0
+ID: G-050 | General | Fila 4, Asiento 4 | Total: $400.0
+--- FIN DEL REPORTE ---
+
+========================================
+  REPORTE DE VENTAS - 09/05/2026 15:59:36
+========================================
+[09/05/2026 15:59:11] Boleto: BOL-47846  | Categoría: VIP          | Asiento: Fila 0, Asiento 0 | Total: $1500,00
+[09/05/2026 15:59:19] Boleto: BOL-58641  | Categoría: VIP          | Asiento: Fila 0, Asiento 1 | Total: $1500,00
+[09/05/2026 15:59:31] Boleto: BOL-70551  | Categoría: General      | Asiento: Fila 5, Asiento 3 | Total: $400,00
+----------------------------------------
+Total boletos vendidos : 3
+Ingreso total generado : $3400,00
+--- FIN DEL REPORTE ---
+
+========================================
+  REPORTE DE VENTAS - 09/05/2026 16:20:52
+========================================
+[09/05/2026 16:20:49] Boleto: BOL-48279  | Categoría: VIP          | Asiento: Fila 0, Asiento 3 | Total: $1500,00
+----------------------------------------
+Total boletos vendidos : 1
+Ingreso total generado : $1500,00
+--- FIN DEL REPORTE ---
+
+========================================
+  REPORTE DE VENTAS - 09/05/2026 16:22:41
+========================================
+[09/05/2026 16:22:41] Boleto: V-001      | Categoría: VIP          | Asiento: Fila 0, Asiento 0 | Total: $1500,00
+[09/05/2026 16:22:41] Boleto: V-002      | Categoría: VIP          | Asiento: Fila 0, Asiento 1 | Total: $1500,00
+[09/05/2026 16:22:41] Boleto: G-050      | Categoría: General      | Asiento: Fila 4, Asiento 4 | Total: $400,00
+----------------------------------------
+Total boletos vendidos : 3
+Ingreso total generado : $3400,00
+--- FIN DEL REPORTE ---
+

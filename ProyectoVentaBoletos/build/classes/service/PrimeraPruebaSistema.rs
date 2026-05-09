@@ -1,2 +1,1 @@
-service.PruebaSistema
 service.PrimeraPruebaSistema
