@@ -11,452 +11,313 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Panel encargado de dibujar TODO el estadio:
- * - cancha
- * - tribunas
- * - botones de asientos
- * - selección visual
- *
- * Esta clase encapsula toda la lógica visual del estadio.
+ * Panel que dibuja el estadio completo con 4 tribunas y cancha central.
+ * Notifica a PanelControl en tiempo real cada vez que el usuario
+ * selecciona o deselecciona un asiento.
  */
 public class PanelEstadio extends JPanel {
 
-    // ─────────────────────────────────────────
-    // Backend
-    // ─────────────────────────────────────────
-    private SistemaEstadio sistema;
+    // ── Backend ───────────────────────────────────────────────────────────────
+    private final SistemaEstadio sistema;
 
-    // ─────────────────────────────────────────
-    // Matriz visual de botones
-    // ─────────────────────────────────────────
+    // ── Referencia al panel de control (para actualización en tiempo real) ────
+    private PanelControl panelControl;
+
+    // ── Matriz visual de botones ──────────────────────────────────────────────
     private JButton[][] botonesAsientos;
 
-    // ─────────────────────────────────────────
-    // Lista de asientos seleccionados
-    // ─────────────────────────────────────────
-    private List<Point> asientosSeleccionados;
-
-    // ─────────────────────────────────────────
-    // Máximo permitido
-    // ─────────────────────────────────────────
+    // ── Selección múltiple ────────────────────────────────────────────────────
+    private final List<Point> asientosSeleccionados = new ArrayList<>();
     private static final int MAX_BOLETOS = 6;
 
-    // ─────────────────────────────────────────
-    // Colores
-    // ─────────────────────────────────────────
-    private static final Color COLOR_OCUPADO =
-            new Color(231,76,60);
+    // ── Colores ───────────────────────────────────────────────────────────────
+    private static final Color C_VIP     = new Color(24,  95, 165);
+    private static final Color C_PREF    = new Color(15, 110,  86);
+    private static final Color C_GEN     = new Color(95,  94,  90);
+    private static final Color C_OCUPADO = new Color(123, 45,  45);
+    private static final Color C_SELEC   = new Color(241, 196,  15);
+    private static final Color C_PANEL   = new Color(38,  48,  60);
+    private static final Color C_ACENTO  = new Color(52, 152, 219);
 
-    private static final Color COLOR_SELECCIONADO =
-            new Color(241,196,15);
+    // ── Tamaño de cada botón ──────────────────────────────────────────────────
+    private static final int SW  = 24;
+    private static final int SH  = 18;
+    private static final int GAP = 3;
 
-    private static final Color COLOR_PANEL =
-            new Color(52,73,94);
+    // ── Límites del bloque central (cancha) ───────────────────────────────────
+    private final int filaCancha1;
+    private final int filaCancha2;
+    private final int colCancha1;
+    private final int colCancha2;
 
-    private static final Color COLOR_ACENTO =
-            new Color(52,152,219);
-
-    private static final Color COLOR_VIP =
-            new Color(155,89,182);
-
-    private static final Color COLOR_PREF =
-            new Color(52,152,219);
-
-    private static final Color COLOR_GENERAL =
-            new Color(46,204,113);
-
-    /**
-     * Constructor principal.
-     */
+    // ─────────────────────────────────────────────────────────────────────────
     public PanelEstadio(SistemaEstadio sistema) {
-
         this.sistema = sistema;
 
-        this.asientosSeleccionados =
-                new ArrayList<>();
+        boolean[][] m = sistema.getMatrizAsientos();
+        int filas = m.length;
+        int cols  = m[0].length;
 
+        this.filaCancha1 = filas / 2 - 1;
+        this.filaCancha2 = filas / 2;
+        this.colCancha1  = cols  / 2 - 1;
+        this.colCancha2  = cols  / 2;
+
+        this.botonesAsientos = new JButton[filas][cols];
         construirPanel();
     }
 
-    /**
-     * Construye TODO el estadio.
-     */
+    /** Inyecta la referencia al PanelControl para notificaciones en tiempo real */
+    public void setPanelControl(PanelControl panelControl) {
+        this.panelControl = panelControl;
+    }
+
+    // ── Construcción principal ────────────────────────────────────────────────
     private void construirPanel() {
+        setLayout(new BorderLayout(GAP, GAP));
+        setBackground(C_PANEL);
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(C_ACENTO, 2),
+                new EmptyBorder(12, 12, 12, 12)));
 
-        setLayout(new BorderLayout(20,20));
-
-        setBackground(COLOR_PANEL);
-
-        setBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(
-                                COLOR_ACENTO,
-                                2
-                        ),
-                        new EmptyBorder(
-                                20,
-                                20,
-                                20,
-                                20
-                        )
-                )
-        );
-
-        boolean[][] matriz =
-                sistema.getMatrizAsientos();
-
-        botonesAsientos =
-                new JButton[
-                        matriz.length
-                ][
-                        matriz[0].length
-                ];
-
-        // NORTE
-        add(
-                crearZonaHorizontal(0,2),
-                BorderLayout.NORTH
-        );
-
-        // SUR
-        add(
-                crearZonaHorizontal(11,13),
-                BorderLayout.SOUTH
-        );
-
-        // OESTE
-        add(
-                crearZonaVertical(3,10,0,2),
-                BorderLayout.WEST
-        );
-
-        // ESTE
-        add(
-                crearZonaVertical(3,10,11,13),
-                BorderLayout.EAST
-        );
-
-        // CANCHA
-        add(
-                crearCancha(),
-                BorderLayout.CENTER
-        );
+        add(crearTribunaNorte(), BorderLayout.NORTH);
+        add(crearTribunaOeste(), BorderLayout.WEST);
+        add(crearCancha(),       BorderLayout.CENTER);
+        add(crearTribunaEste(),  BorderLayout.EAST);
+        add(crearTribunaSur(),   BorderLayout.SOUTH);
     }
 
-    /**
-     * Crea la cancha.
-     */
+    // ── Cancha ────────────────────────────────────────────────────────────────
     private JPanel crearCancha() {
-
-        JPanel cancha =
-                new JPanel(
-                        new BorderLayout()
-                );
-
-        cancha.setBackground(
-                new Color(39,174,96)
-        );
-
-        cancha.setBorder(
-                BorderFactory.createLineBorder(
-                        Color.WHITE,
-                        5
-                )
-        );
-
-        JLabel texto =
-                new JLabel(
-                        " CANCHA ",
-                        SwingConstants.CENTER
-                );
-
-        texto.setForeground(Color.WHITE);
-
-        texto.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        34
-                )
-        );
-
-        cancha.add(texto,
-                BorderLayout.CENTER);
-
-        return cancha;
+        JPanel p = new JPanel(new BorderLayout());
+        p.setBackground(new Color(39, 174, 96));
+        p.setBorder(BorderFactory.createLineBorder(new Color(22, 120, 60), 4));
+        p.setPreferredSize(new Dimension(180, 120));
+        JLabel lbl = new JLabel("CANCHA", SwingConstants.CENTER);
+        lbl.setFont(new Font("Arial", Font.BOLD, 22));
+        lbl.setForeground(new Color(200, 240, 200));
+        p.add(lbl, BorderLayout.CENTER);
+        return p;
     }
 
-    /**
-     * Crea tribunas horizontales.
-     */
-    private JPanel crearZonaHorizontal(
-            int filaInicio,
-            int filaFin
-    ) {
+    // ── Tribuna Norte ─────────────────────────────────────────────────────────
+    private JPanel crearTribunaNorte() {
+        int colTot  = sistema.getMatrizAsientos()[0].length;
+        int filaFin = filaCancha1 - 1;
+        int filas   = filaFin + 1;
 
-        JPanel panel =
-                new JPanel(
-                        new GridLayout(3,14,4,4)
-                );
+        JPanel wrap = new JPanel(new BorderLayout(0, 2));
+        wrap.setBackground(C_PANEL);
 
-        panel.setBackground(COLOR_PANEL);
+        JLabel lbl = new JLabel("Tribuna Norte", SwingConstants.CENTER);
+        lbl.setFont(new Font("Arial", Font.BOLD, 10));
+        lbl.setForeground(new Color(120, 135, 150));
 
-        boolean[][] matriz =
-                sistema.getMatrizAsientos();
+        JPanel grid = new JPanel(new GridLayout(filas, colTot, GAP, GAP));
+        grid.setBackground(C_PANEL);
 
-        for (int i = filaInicio;
-             i <= filaFin;
-             i++) {
-
-            for (int j = 0;
-                 j < 14;
-                 j++) {
-
-                JButton btn =
-                        crearBotonAsiento(
-                                i,
-                                j,
-                                matriz[i][j]
-                        );
-
+        for (int i = 0; i <= filaFin; i++) {
+            for (int j = 0; j < colTot; j++) {
+                JButton btn = crearBoton(i, j);
                 botonesAsientos[i][j] = btn;
-
-                panel.add(btn);
+                grid.add(btn);
             }
         }
 
-        return panel;
+        wrap.add(lbl,  BorderLayout.NORTH);
+        wrap.add(grid, BorderLayout.CENTER);
+        return wrap;
     }
 
-    /**
-     * Crea tribunas verticales.
-     */
-    private JPanel crearZonaVertical(
-            int filaInicio,
-            int filaFin,
-            int colInicio,
-            int colFin
-    ) {
+    // ── Tribuna Sur ───────────────────────────────────────────────────────────
+    private JPanel crearTribunaSur() {
+        int totalFilas = sistema.getMatrizAsientos().length;
+        int colTot     = sistema.getMatrizAsientos()[0].length;
+        int filaIni    = filaCancha2 + 1;
+        int filas      = totalFilas - filaIni;
 
-        JPanel panel =
-                new JPanel(
-                        new GridLayout(8,3,4,4)
-                );
+        JPanel wrap = new JPanel(new BorderLayout(0, 2));
+        wrap.setBackground(C_PANEL);
 
-        panel.setBackground(COLOR_PANEL);
+        JLabel lbl = new JLabel("Tribuna Sur", SwingConstants.CENTER);
+        lbl.setFont(new Font("Arial", Font.BOLD, 10));
+        lbl.setForeground(new Color(120, 135, 150));
 
-        boolean[][] matriz =
-                sistema.getMatrizAsientos();
+        JPanel grid = new JPanel(new GridLayout(filas, colTot, GAP, GAP));
+        grid.setBackground(C_PANEL);
 
-        for (int i = filaInicio;
-             i <= filaFin;
-             i++) {
-
-            for (int j = colInicio;
-                 j <= colFin;
-                 j++) {
-
-                JButton btn =
-                        crearBotonAsiento(
-                                i,
-                                j,
-                                matriz[i][j]
-                        );
-
+        for (int i = filaIni; i < totalFilas; i++) {
+            for (int j = 0; j < colTot; j++) {
+                JButton btn = crearBoton(i, j);
                 botonesAsientos[i][j] = btn;
-
-                panel.add(btn);
+                grid.add(btn);
             }
         }
 
-        return panel;
+        wrap.add(grid, BorderLayout.CENTER);
+        wrap.add(lbl,  BorderLayout.SOUTH);
+        return wrap;
     }
 
-    /**
-     * Crea un asiento individual.
-     */
-    private JButton crearBotonAsiento(
-            int fila,
-            int col,
-            boolean ocupado
-    ) {
+    // ── Tribuna Oeste ─────────────────────────────────────────────────────────
+    private JPanel crearTribunaOeste() {
+        int filaIni = filaCancha1;
+        int filaFin = filaCancha2;
+        int colFin  = colCancha1 - 1;
+        int filas   = filaFin - filaIni + 1;
+        int cols    = colFin + 1;
 
-        TipoZona zona =
-                sistema.getMatrizZonas()
-                        [fila][col];
+        JPanel wrap = new JPanel(new BorderLayout(2, 0));
+        wrap.setBackground(C_PANEL);
 
-        String textoZona = "";
+        JLabel lbl = new JLabel("Oeste", SwingConstants.CENTER);
+        lbl.setFont(new Font("Arial", Font.BOLD, 10));
+        lbl.setForeground(new Color(120, 135, 150));
 
-        Color colorZona = COLOR_GENERAL;
+        JPanel grid = new JPanel(new GridLayout(filas, cols, GAP, GAP));
+        grid.setBackground(C_PANEL);
 
-        switch (zona) {
-
-            case VIP:
-
-                textoZona = "VIP";
-
-                colorZona = COLOR_VIP;
-
-                break;
-
-            case PREFERENCIAL:
-
-                textoZona = "PREF";
-
-                colorZona = COLOR_PREF;
-
-                break;
-
-            case GENERAL:
-
-                textoZona = "GEN";
-
-                colorZona = COLOR_GENERAL;
-
-                break;
+        for (int i = filaIni; i <= filaFin; i++) {
+            for (int j = 0; j <= colFin; j++) {
+                JButton btn = crearBoton(i, j);
+                botonesAsientos[i][j] = btn;
+                grid.add(btn);
+            }
         }
 
-        JButton btn =
-                new JButton(
-                        "<html><center>" +
-                        textoZona +
-                        "<br>F" +
-                        fila +
-                        "-A" +
-                        col +
-                        "</center></html>"
-                );
+        wrap.add(lbl,  BorderLayout.WEST);
+        wrap.add(grid, BorderLayout.CENTER);
+        return wrap;
+    }
 
-        btn.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        9
-                )
-        );
+    // ── Tribuna Este ──────────────────────────────────────────────────────────
+    private JPanel crearTribunaEste() {
+        int filaIni = filaCancha1;
+        int filaFin = filaCancha2;
+        int colIni  = colCancha2 + 1;
+        int colTot  = sistema.getMatrizAsientos()[0].length;
+        int filas   = filaFin - filaIni + 1;
+        int cols    = colTot - colIni;
 
-        btn.setForeground(Color.WHITE);
+        JPanel wrap = new JPanel(new BorderLayout(2, 0));
+        wrap.setBackground(C_PANEL);
 
-        btn.setBackground(colorZona);
+        JLabel lbl = new JLabel("Este", SwingConstants.CENTER);
+        lbl.setFont(new Font("Arial", Font.BOLD, 10));
+        lbl.setForeground(new Color(120, 135, 150));
 
+        JPanel grid = new JPanel(new GridLayout(filas, cols, GAP, GAP));
+        grid.setBackground(C_PANEL);
+
+        for (int i = filaIni; i <= filaFin; i++) {
+            for (int j = colIni; j < colTot; j++) {
+                JButton btn = crearBoton(i, j);
+                botonesAsientos[i][j] = btn;
+                grid.add(btn);
+            }
+        }
+
+        wrap.add(grid, BorderLayout.CENTER);
+        wrap.add(lbl,  BorderLayout.EAST);
+        return wrap;
+    }
+
+    // ── Crear botón individual ────────────────────────────────────────────────
+    private JButton crearBoton(int fila, int col) {
+        boolean  ocupado = sistema.getMatrizAsientos()[fila][col];
+        TipoZona zona    = sistema.getMatrizZonas()[fila][col];
+        String   cat     = zonaToString(zona);
+        double   precio  = sistema.getMapaPrecios().getOrDefault(cat, 0.0);
+
+        JButton btn = new JButton();
+        btn.setPreferredSize(new Dimension(SW, SH));
+        btn.setMinimumSize(new Dimension(SW, SH));
+        btn.setMaximumSize(new Dimension(SW, SH));
         btn.setFocusPainted(false);
-
         btn.setBorderPainted(false);
+        btn.setToolTipText(cat + "  F" + fila + "-A" + col + "  $" + String.format("%.0f", precio));
 
         if (ocupado) {
-
-            btn.setBackground(COLOR_OCUPADO);
-
+            btn.setBackground(C_OCUPADO);
             btn.setEnabled(false);
+        } else {
+            btn.setBackground(colorZona(zona));
+            btn.addActionListener(e -> seleccionarAsiento(fila, col, btn));
         }
-
-        else {
-
-            btn.addActionListener(
-                    e -> seleccionarAsiento(
-                            fila,
-                            col,
-                            btn
-                    )
-            );
-        }
-
         return btn;
     }
 
-    /**
-     * Maneja selección de asientos.
-     */
-    private void seleccionarAsiento(
-            int fila,
-            int col,
-            JButton btn
-    ) {
+    // ── Lógica de selección ───────────────────────────────────────────────────
+    private void seleccionarAsiento(int fila, int col, JButton btn) {
+        Point p = new Point(fila, col);
 
-        Point asiento =
-                new Point(fila,col);
-
-        if (asientosSeleccionados
-                .contains(asiento)) {
-
-            asientosSeleccionados.remove(asiento);
-
-            restaurarColorOriginal(
-                    fila,
-                    col,
-                    btn
-            );
-        }
-
-        else {
-
-            if (asientosSeleccionados
-                    .size() >= MAX_BOLETOS) {
-
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Máximo 6 boletos."
-                );
-
+        if (asientosSeleccionados.contains(p)) {
+            asientosSeleccionados.remove(p);
+            btn.setBackground(colorZona(sistema.getMatrizZonas()[fila][col]));
+        } else {
+            if (asientosSeleccionados.size() >= MAX_BOLETOS) {
+                JOptionPane.showMessageDialog(this,
+                        "Máximo " + MAX_BOLETOS + " boletos por compra.",
+                        "Límite alcanzado", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
-            asientosSeleccionados.add(asiento);
-
-            btn.setBackground(
-                    COLOR_SELECCIONADO
-            );
+            asientosSeleccionados.add(p);
+            btn.setBackground(C_SELEC);
         }
+
+        // ── Notificar a PanelControl en tiempo real ───────────────────────────
+        notificarPanelControl();
     }
 
     /**
-     * Restaura color original.
+     * Construye la lista de SeatItem desde los asientos seleccionados
+     * y se la pasa a PanelControl para que actualice la vista al instante.
      */
-    private void restaurarColorOriginal(
-            int fila,
-            int col,
-            JButton btn
-    ) {
+    private void notificarPanelControl() {
+        if (panelControl == null) return;
 
-        TipoZona zona =
-                sistema.getMatrizZonas()
-                        [fila][col];
+        List<PanelControl.SeatItem> items = new ArrayList<>();
+        for (Point p : asientosSeleccionados) {
+            TipoZona zona  = sistema.getMatrizZonas()[p.x][p.y];
+            String   tipo  = zonaToString(zona);
+            int precio = (int) sistema.getMapaPrecios().getOrDefault(tipo, 0.0).doubleValue();
+            String   id    = tipo.substring(0, 1) + "-F" + p.x + "-A" + p.y;
+            items.add(new PanelControl.SeatItem(id, tipo, precio));
+        }
+        panelControl.actualizarSeleccion(items);
+    }
 
+    // ── Marcar asientos como ocupados tras confirmar compra ───────────────────
+    public void marcarOcupados(List<Point> puntos) {
+        for (Point p : puntos) {
+            JButton btn = botonesAsientos[p.x][p.y];
+            if (btn != null) {
+                btn.setBackground(C_OCUPADO);
+                btn.setEnabled(false);
+            }
+        }
+        asientosSeleccionados.clear();
+        notificarPanelControl(); // limpia la lista en tiempo real
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    private Color colorZona(TipoZona zona) {
         switch (zona) {
-
-            case VIP:
-
-                btn.setBackground(COLOR_VIP);
-
-                break;
-
-            case PREFERENCIAL:
-
-                btn.setBackground(COLOR_PREF);
-
-                break;
-
-            case GENERAL:
-
-                btn.setBackground(COLOR_GENERAL);
-
-                break;
+            case VIP:          return C_VIP;
+            case PREFERENCIAL: return C_PREF;
+            default:           return C_GEN;
         }
     }
 
-    /**
-     * Getter de asientos seleccionados.
-     */
-    public List<Point> getAsientosSeleccionados() {
-
-        return asientosSeleccionados;
+    private String zonaToString(TipoZona zona) {
+        switch (zona) {
+            case VIP:          return "VIP";
+            case PREFERENCIAL: return "Preferencial";
+            default:           return "General";
+        }
     }
 
-    /**
-     * Getter de botones.
-     */
-    public JButton[][] getBotonesAsientos() {
-
-        return botonesAsientos;
-    }
+    // ── Getters para VentanaPrincipal ─────────────────────────────────────────
+    public List<Point> getAsientosSeleccionados() { return asientosSeleccionados; }
+    public JButton[][] getBotonesAsientos()        { return botonesAsientos; }
 }

@@ -2,231 +2,276 @@ package View;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.util.List;
 
 /**
- * Panel lateral derecho del sistema.
- * Su función es mostrar información visual al usuario:
- * - Estado de selección de asientos
- * - Resumen de ventas
- * - Historial de compras
+ * Panel lateral derecho.
+ * Muestra en tiempo real:
+ *   - Lista de asientos seleccionados (categoría + precio)
+ *   - Subtotal de la selección actual
+ *   - Resumen acumulado de ventas del día
+ *   - Historial de compras confirmadas
  */
 public class PanelControl extends JPanel {
 
-    // ─────────────────────────────────────────
-    // Componentes gráficos del panel
-    // ─────────────────────────────────────────
+    // ── Colores ───────────────────────────────────────────────────────────────
+    private static final Color C_FONDO   = new Color(28,  35,  45);
+    private static final Color C_PANEL   = new Color(38,  48,  60);
+    private static final Color C_BORDE   = new Color(55,  70,  88);
+    private static final Color C_ACENTO  = new Color(52, 152, 219);
+    private static final Color C_VIP     = new Color(24,  95, 165);
+    private static final Color C_PREF    = new Color(15, 110,  86);
+    private static final Color C_GEN     = new Color(95,  94,  90);
+    private static final Color C_VERDE   = new Color(46, 204, 113);
+    private static final Color C_AMARILLO= new Color(241,196,  15);
 
-    // Muestra información del asiento seleccionado actualmente
-    private JLabel lblInfoSeleccion;
+    // ── Componentes — sección selección ──────────────────────────────────────
+    private JLabel  lblContador;
+    private JPanel  panelItems;      // lista dinámica de asientos seleccionados
+    private JLabel  lblSubtotal;
 
-    // Muestra el total de boletos vendidos
-    private JLabel lblTotalBoletos;
+    // ── Componentes — sección ventas del día ─────────────────────────────────
+    private JLabel  lblVendidos;
+    private JLabel  lblIngresos;
 
-    // Muestra el total de ingresos generados
-    private JLabel lblTotalIngresos;
-
-    // Área de texto donde se muestra el historial de ventas
+    // ── Componentes — historial ───────────────────────────────────────────────
     private JTextArea areaHistorial;
 
-    // ─────────────────────────────────────────
-    // Paleta de colores del sistema
-    // ─────────────────────────────────────────
-
-    // Color base del panel lateral
-    private static final Color COLOR_FONDO = new Color(44,62,80);
-
-    // Color de fondo de subpaneles
-    private static final Color COLOR_PANEL = new Color(52,73,94);
-
-    // Color de acento para bordes y detalles
-    private static final Color COLOR_ACENTO = new Color(52,152,219);
-
-    // Colores que representan cada tipo de zona
-    private static final Color COLOR_VIP = new Color(155,89,182);
-
-    private static final Color COLOR_PREF = new Color(52,152,219);
-
-    private static final Color COLOR_GENERAL = new Color(46,204,113);
-
-    /**
-     * Constructor del panel.
-     * Inicializa toda la interfaz del panel lateral.
-     */
+    // ─────────────────────────────────────────────────────────────────────────
     public PanelControl() {
-
-        construirPanel();
-    }
-
-    /**
-     * Método principal que construye toda la estructura visual del panel.
-     * Se organiza en tres secciones:
-     * - Información
-     * - Resumen
-     * - Historial
-     */
-    private void construirPanel() {
-
-        // Layout vertical para apilar los paneles
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBackground(C_FONDO);
+        setPreferredSize(new Dimension(260, 0));
 
-        setBackground(COLOR_FONDO);
-
-        setPreferredSize(new Dimension(300, 0));
-
-        // Se agregan las tres secciones principales del panel
-        add(crearPanelInfo());
-
-        add(Box.createVerticalStrut(10)); // Separación visual
-
-        add(crearPanelResumen());
-
-        add(Box.createVerticalStrut(10));
-
-        add(crearPanelHistorial());
+        add(crearCardSeleccion());
+        add(Box.createVerticalStrut(8));
+        add(crearCardVentas());
+        add(Box.createVerticalStrut(8));
+        add(crearCardHistorial());
+        add(Box.createVerticalGlue());
     }
 
+    // ══════════════════════════════════════════════════════════════════════════
+    // CARD 1 — Selección en tiempo real
+    // ══════════════════════════════════════════════════════════════════════════
+    private JPanel crearCardSeleccion() {
+        JPanel card = baseCard();
+        card.setLayout(new BorderLayout(0, 6));
+
+        // Título
+        lblContador = new JLabel("Seleccionados: 0 / 6");
+        lblContador.setFont(new Font("Arial", Font.BOLD, 12));
+        lblContador.setForeground(Color.WHITE);
+
+        // Lista de ítems (dinámica)
+        panelItems = new JPanel();
+        panelItems.setLayout(new BoxLayout(panelItems, BoxLayout.Y_AXIS));
+        panelItems.setBackground(new Color(22, 28, 36));
+
+        JScrollPane scroll = new JScrollPane(panelItems);
+        scroll.setPreferredSize(new Dimension(240, 145));
+        scroll.setBorder(BorderFactory.createLineBorder(C_BORDE));
+        scroll.getViewport().setBackground(new Color(22, 28, 36));
+        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        // Subtotal
+        JPanel footerSel = new JPanel(new BorderLayout());
+        footerSel.setBackground(C_PANEL);
+        footerSel.setBorder(new MatteBorder(1, 0, 0, 0, C_BORDE));
+
+        lblSubtotal = new JLabel("Subtotal: $0");
+        lblSubtotal.setFont(new Font("Arial", Font.BOLD, 13));
+        lblSubtotal.setForeground(C_AMARILLO);
+        lblSubtotal.setBorder(new EmptyBorder(6, 0, 0, 0));
+
+        footerSel.add(lblSubtotal, BorderLayout.CENTER);
+
+        card.add(lblContador, BorderLayout.NORTH);
+        card.add(scroll,      BorderLayout.CENTER);
+        card.add(footerSel,   BorderLayout.SOUTH);
+
+        mostrarVacio();
+        return card;
+    }
+
+    // ── Render de la lista de seleccionados ───────────────────────────────────
     /**
-     * Crea el panel de información general.
-     * Muestra leyenda de colores y asiento seleccionado.
+     * Llamado desde PanelEstadio cada vez que cambia la selección.
+     * @param items  Lista de SeatItem con seatId, tipo y precio
      */
-    private JPanel crearPanelInfo() {
+    public void actualizarSeleccion(List<SeatItem> items) {
+        panelItems.removeAll();
 
-        JPanel panel = new JPanel(new GridLayout(5,1,5,8));
+        int total = 0;
 
-        panel.setBackground(COLOR_PANEL);
+        if (items == null || items.isEmpty()) {
+            mostrarVacio();
+        } else {
+            for (SeatItem item : items) {
+                panelItems.add(crearFila(item));
+                panelItems.add(Box.createVerticalStrut(2));
+                total += item.precio;
+            }
+        }
 
-        panel.setBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(COLOR_ACENTO, 1),
-                        new EmptyBorder(10, 10, 10, 10)
-                )
-        );
+        lblContador.setText("Seleccionados: " + (items == null ? 0 : items.size()) + " / 6");
+        lblSubtotal.setText("Subtotal: $" + String.format("%,.0f", (double) total));
 
-        // Título del panel
-        JLabel titulo = new JLabel("Información");
+        panelItems.revalidate();
+        panelItems.repaint();
+    }
+
+    private void mostrarVacio() {
+        panelItems.removeAll();
+        JLabel empty = new JLabel("  Ningún asiento seleccionado");
+        empty.setFont(new Font("Arial", Font.ITALIC, 11));
+        empty.setForeground(new Color(100, 115, 130));
+        empty.setBorder(new EmptyBorder(8, 4, 8, 4));
+        panelItems.add(empty);
+        panelItems.revalidate();
+        panelItems.repaint();
+    }
+
+    private JPanel crearFila(SeatItem item) {
+        JPanel row = new JPanel(new BorderLayout(4, 0));
+        row.setBackground(new Color(32, 42, 54));
+        row.setBorder(new EmptyBorder(4, 6, 4, 6));
+        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
+
+        // Punto de color según categoría
+        JLabel dot = new JLabel("●");
+        dot.setFont(new Font("Arial", Font.PLAIN, 10));
+        dot.setForeground(colorCategoria(item.tipo));
+
+        // Texto del asiento
+        JLabel info = new JLabel(" " + item.seatId + "  (" + abrevTipo(item.tipo) + ")");
+        info.setFont(new Font("Arial", Font.PLAIN, 11));
+        info.setForeground(Color.WHITE);
+
+        // Precio
+        JLabel precio = new JLabel("$" + String.format("%,.0f", (double) item.precio));
+        precio.setFont(new Font("Arial", Font.BOLD, 11));
+        precio.setForeground(new Color(100, 200, 255));
+
+        JPanel izq = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        izq.setBackground(new Color(32, 42, 54));
+        izq.add(dot);
+        izq.add(info);
+
+        row.add(izq,    BorderLayout.CENTER);
+        row.add(precio, BorderLayout.EAST);
+        return row;
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // CARD 2 — Resumen de ventas del día
+    // ══════════════════════════════════════════════════════════════════════════
+    private JPanel crearCardVentas() {
+        JPanel card = baseCard();
+        card.setLayout(new GridLayout(3, 1, 0, 4));
+
+        JLabel titulo = new JLabel("Ventas del día");
+        titulo.setFont(new Font("Arial", Font.BOLD, 12));
         titulo.setForeground(Color.WHITE);
-        titulo.setFont(new Font("Arial", Font.BOLD, 14));
 
-        // Leyenda de colores por zona
-        JLabel leyenda1 = new JLabel("VIP = Morado");
-        leyenda1.setForeground(COLOR_VIP);
+        lblVendidos = new JLabel("Boletos vendidos: 0");
+        lblVendidos.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblVendidos.setForeground(C_VERDE);
 
-        JLabel leyenda2 = new JLabel("PREF = Azul");
-        leyenda2.setForeground(COLOR_PREF);
+        lblIngresos = new JLabel("Ingresos totales: $0.00");
+        lblIngresos.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblIngresos.setForeground(C_VERDE);
 
-        JLabel leyenda3 = new JLabel("GEN = Verde");
-        leyenda3.setForeground(COLOR_GENERAL);
-
-        // Estado de selección de asiento
-        lblInfoSeleccion = new JLabel("Asientos: ninguno");
-        lblInfoSeleccion.setForeground(Color.WHITE);
-
-        // Se agregan componentes al panel
-        panel.add(titulo);
-        panel.add(leyenda1);
-        panel.add(leyenda2);
-        panel.add(leyenda3);
-        panel.add(lblInfoSeleccion);
-
-        return panel;
+        card.add(titulo);
+        card.add(lblVendidos);
+        card.add(lblIngresos);
+        return card;
     }
 
-    /**
-     * Crea el panel de resumen de ventas.
-     * Muestra boletos vendidos e ingresos totales.
-     */
-    private JPanel crearPanelResumen() {
+    // ══════════════════════════════════════════════════════════════════════════
+    // CARD 3 — Historial de compras confirmadas
+    // ══════════════════════════════════════════════════════════════════════════
+    private JPanel crearCardHistorial() {
+        JPanel card = baseCard();
+        card.setLayout(new BorderLayout(0, 6));
+        card.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JPanel panel = new JPanel(new GridLayout(2,1,5,5));
-
-        panel.setBackground(COLOR_PANEL);
-
-        panel.setBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(COLOR_ACENTO, 1),
-                        new EmptyBorder(10, 10, 10, 10)
-                )
-        );
-
-        // Etiqueta de boletos vendidos
-        lblTotalBoletos = new JLabel("Boletos vendidos: 0");
-
-        // Etiqueta de ingresos totales
-        lblTotalIngresos = new JLabel("Ingresos: $0.00");
-
-        // Color para resaltar datos del resumen
-        lblTotalBoletos.setForeground(COLOR_GENERAL);
-        lblTotalIngresos.setForeground(COLOR_GENERAL);
-
-        panel.add(lblTotalBoletos);
-        panel.add(lblTotalIngresos);
-
-        return panel;
-    }
-
-    /**
-     * Crea el panel de historial de ventas.
-     * Muestra todas las compras realizadas.
-     */
-    private JPanel crearPanelHistorial() {
-
-        JPanel panel = new JPanel(new BorderLayout());
-
-        panel.setBackground(COLOR_PANEL);
-
-        panel.setBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(COLOR_ACENTO, 1),
-                        new EmptyBorder(10, 10, 10, 10)
-                )
-        );
-
-        // Título del historial
-        JLabel titulo = new JLabel("Historial");
+        JLabel titulo = new JLabel("Historial de compras");
+        titulo.setFont(new Font("Arial", Font.BOLD, 12));
         titulo.setForeground(Color.WHITE);
 
-        // Área de texto donde se agregan los registros
         areaHistorial = new JTextArea();
         areaHistorial.setEditable(false);
+        areaHistorial.setFont(new Font("Monospaced", Font.PLAIN, 10));
+        areaHistorial.setBackground(new Color(22, 28, 36));
+        areaHistorial.setForeground(new Color(180, 195, 210));
+        areaHistorial.setBorder(new EmptyBorder(4, 6, 4, 6));
 
         JScrollPane scroll = new JScrollPane(areaHistorial);
+        scroll.setPreferredSize(new Dimension(240, 130));
+        scroll.setBorder(BorderFactory.createLineBorder(C_BORDE));
+        scroll.getViewport().setBackground(new Color(22, 28, 36));
 
-        panel.add(titulo, BorderLayout.NORTH);
-        panel.add(scroll, BorderLayout.CENTER);
-
-        return panel;
+        card.add(titulo, BorderLayout.NORTH);
+        card.add(scroll, BorderLayout.CENTER);
+        return card;
     }
 
-    // ─────────────────────────────────────────
-    // MÉTODOS PÚBLICOS (actualización desde el sistema)
-    // ─────────────────────────────────────────
-
-    /**
-     * Actualiza la información del asiento seleccionado.
-     */
-    public void actualizarSeleccion(String texto) {
-
-        lblInfoSeleccion.setText(texto);
+    // ── Card base ─────────────────────────────────────────────────────────────
+    private JPanel baseCard() {
+        JPanel c = new JPanel();
+        c.setBackground(C_PANEL);
+        c.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(C_BORDE, 1, true),
+                new EmptyBorder(10, 10, 10, 10)));
+        c.setAlignmentX(Component.LEFT_ALIGNMENT);
+        c.setMaximumSize(new Dimension(260, Integer.MAX_VALUE));
+        return c;
     }
 
-    /**
-     * Actualiza los datos del resumen de ventas.
-     */
+    // ── Métodos públicos para VentanaPrincipal ────────────────────────────────
     public void actualizarResumen(int boletos, double ingresos) {
-
-        lblTotalBoletos.setText("Boletos vendidos: " + boletos);
-
-        lblTotalIngresos.setText(
-                String.format("Ingresos: $%.2f", ingresos)
-        );
+        lblVendidos.setText("Boletos vendidos: " + boletos);
+        lblIngresos.setText(String.format("Ingresos totales: $%,.2f", ingresos));
     }
 
-    /**
-     * Agrega una nueva línea al historial de ventas.
-     */
     public void agregarHistorial(String texto) {
-
         areaHistorial.append(texto + "\n");
+        // Auto-scroll al final
+        areaHistorial.setCaretPosition(areaHistorial.getDocument().getLength());
+    }
+
+    // ── Helpers privados ──────────────────────────────────────────────────────
+    private Color colorCategoria(String tipo) {
+        switch (tipo) {
+            case "VIP":          return C_VIP;
+            case "Preferencial": return C_PREF;
+            default:             return C_GEN;
+        }
+    }
+
+    private String abrevTipo(String tipo) {
+        switch (tipo) {
+            case "VIP":          return "VIP";
+            case "Preferencial": return "Pref";
+            default:             return "Gral";
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // CLASE INTERNA — Datos de un asiento seleccionado
+    // ══════════════════════════════════════════════════════════════════════════
+    public static class SeatItem {
+        public final String seatId;
+        public final String tipo;
+        public final int    precio;
+
+        public SeatItem(String seatId, String tipo, int precio) {
+            this.seatId = seatId;
+            this.tipo   = tipo;
+            this.precio = precio;
+        }
     }
 }
