@@ -35,3 +35,71 @@ Total boletos vendidos : 3
 Ingreso total generado : $3400,00
 --- FIN DEL REPORTE ---
 
+========================================
+  REPORTE DE VENTAS - 09/05/2026 17:08:39
+========================================
+[09/05/2026 17:08:24] Boleto: fdd1c186   | Categoría: General      | Asiento: Fila 1, Asiento 3 | Total: $400,00
+[09/05/2026 17:08:24] Boleto: 9ea3f10e   | Categoría: General      | Asiento: Fila 0, Asiento 3 | Total: $400,00
+[09/05/2026 17:08:24] Boleto: 287a9860   | Categoría: General      | Asiento: Fila 1, Asiento 2 | Total: $400,00
+[09/05/2026 17:08:24] Boleto: 847b8144   | Categoría: General      | Asiento: Fila 0, Asiento 2 | Total: $400,00
+[09/05/2026 17:08:24] Boleto: 9e723ff7   | Categoría: General      | Asiento: Fila 0, Asiento 1 | Total: $400,00
+[09/05/2026 17:08:24] Boleto: d5f5d2c3   | Categoría: General      | Asiento: Fila 1, Asiento 1 | Total: $400,00
+[09/05/2026 17:08:37] Boleto: 87f1f081   | Categoría: VIP          | Asiento: Fila 6, Asiento 5 | Total: $1500,00
+[09/05/2026 17:08:37] Boleto: 65be8baa   | Categoría: VIP          | Asiento: Fila 7, Asiento 5 | Total: $1500,00
+[09/05/2026 17:08:37] Boleto: a9c33f36   | Categoría: VIP          | Asiento: Fila 7, Asiento 4 | Total: $1500,00
+[09/05/2026 17:08:37] Boleto: 14e1cf54   | Categoría: VIP          | Asiento: Fila 6, Asiento 4 | Total: $1500,00
+[09/05/2026 17:08:37] Boleto: 4996d693   | Categoría: VIP          | Asiento: Fila 6, Asiento 3 | Total: $1500,00
+[09/05/2026 17:08:37] Boleto: 259b8052   | Categoría: VIP          | Asiento: Fila 7, Asiento 3 | Total: $1500,00
+----------------------------------------
+Total boletos vendidos : 12
+Ingreso total generado : $11400,00
+--- FIN DEL REPORTE ---
+
+========================================
+  REPORTE DE VENTAS - 09/05/2026 17:16:08
+========================================
+[09/05/2026 17:15:23] Boleto: 8572ab98   | Categoría: General      | Asiento: Fila 2, Asiento 7 | Total: $400,00
+[09/05/2026 17:15:24] Boleto: 6cdfedbd   | Categoría: General      | Asiento: Fila 2, Asiento 6 | Total: $400,00
+[09/05/2026 17:15:24] Boleto: 852049c8   | Categoría: General      | Asiento: Fila 2, Asiento 5 | Total: $400,00
+[09/05/2026 17:15:24] Boleto: 67e2a84e   | Categoría: General      | Asiento: Fila 2, Asiento 4 | Total: $400,00
+[09/05/2026 17:15:24] Boleto: 8735edaf   | Categoría: General      | Asiento: Fila 2, Asiento 3 | Total: $400,00
+[09/05/2026 17:15:24] Boleto: bd4d25f8   | Categoría: General      | Asiento: Fila 2, Asiento 2 | Total: $400,00
+[09/05/2026 17:15:51] Boleto: 347660ca   | Categoría: VIP          | Asiento: Fila 5, Asiento 11 | Total: $1500,00
+[09/05/2026 17:15:51] Boleto: 19839193   | Categoría: VIP          | Asiento: Fila 7, Asiento 11 | Total: $1500,00
+[09/05/2026 17:15:51] Boleto: 8ea21f27   | Categoría: VIP          | Asiento: Fila 6, Asiento 11 | Total: $1500,00
+[09/05/2026 17:15:51] Boleto: dc53d2a5   | Categoría: VIP          | Asiento: Fila 8, Asiento 11 | Total: $1500,00
+[09/05/2026 17:15:51] Boleto: 1ee3b1d7   | Categoría: VIP          | Asiento: Fila 7, Asiento 12 | Total: $1500,00
+[09/05/2026 17:15:51] Boleto: 93009d52   | Categoría: VIP          | Asiento: Fila 6, Asiento 12 | Total: $1500,00
+----------------------------------------
+Total boletos vendidos : 12
+Ingreso total generado : $11400,00
+--- FIN DEL REPORTE ---
+
+========================================
+  REPORTE DE VENTAS - 09/05/2026 18:02:29
+========================================
+[09/05/2026 18:02:24] Boleto: 6171ca7c   | Categoría: General      | Asiento: Fila 2, Asiento 11 | Total: $400,00
+[09/05/2026 18:02:24] Boleto: 24335cf6   | Categoría: VIP          | Asiento: Fila 6, Asiento 11 | Total: $1500,00
+[09/05/2026 18:02:24] Boleto: 10fad057   | Categoría: VIP          | Asiento: Fila 6, Asiento 2 | Total: $1500,00
+[09/05/2026 18:02:24] Boleto: 3f2c9b8d   | Categoría: VIP          | Asiento: Fila 5, Asiento 2 | Total: $1500,00
+[09/05/2026 18:02:24] Boleto: 592b702d   | Categoría: VIP          | Asiento: Fila 7, Asiento 2 | Total: $1500,00
+[09/05/2026 18:02:24] Boleto: 226d256e   | Categoría: General      | Asiento: Fila 2, Asiento 6 | Total: $400,00
+----------------------------------------
+Total boletos vendidos : 6
+Ingreso total generado : $6800,00
+--- FIN DEL REPORTE ---
+
+========================================
+  REPORTE DE VENTAS - 09/05/2026 18:20:35
+========================================
+[09/05/2026 18:20:33] Boleto: ea80985a   | Categoría: General      | Asiento: Fila 2, Asiento 8 | Total: $400,00
+[09/05/2026 18:20:33] Boleto: 85d7764a   | Categoría: General      | Asiento: Fila 11, Asiento 8 | Total: $400,00
+[09/05/2026 18:20:33] Boleto: d71e60db   | Categoría: General      | Asiento: Fila 2, Asiento 3 | Total: $400,00
+[09/05/2026 18:20:33] Boleto: 3e50709a   | Categoría: Preferencial | Asiento: Fila 4, Asiento 2 | Total: $800,00
+[09/05/2026 18:20:33] Boleto: d6380cf6   | Categoría: VIP          | Asiento: Fila 5, Asiento 2 | Total: $1500,00
+[09/05/2026 18:20:33] Boleto: e0f42151   | Categoría: VIP          | Asiento: Fila 7, Asiento 2 | Total: $1500,00
+----------------------------------------
+Total boletos vendidos : 6
+Ingreso total generado : $5000,00
+--- FIN DEL REPORTE ---
+

@@ -10,63 +10,80 @@ import model.ReporteVenta;
 
 /**
  * Clase encargada de la persistencia en archivos de texto.
- * Desencola los ReporteVenta generados y los escribe en un .txt diario.
+ * Su función principal es generar un archivo diario con los reportes de ventas.
+ * Los reportes se obtienen desde una cola (estructura FIFO) dentro del sistema.
  */
 public class GestorArchivos {
 
     /**
      * Guarda todos los reportes acumulados en la cola en un archivo físico.
-     * Formato del archivo: reporte_ventas_ddmmaaaa.txt
-     * Si el archivo ya existe (mismo día), agrega al final (append = true).
+     * El archivo se genera con la fecha actual en su nombre:
+     * formato -> reporte_ventas_ddMMyyyy.txt
+     *
+     * Si el archivo ya existe (mismo día), se abre en modo append
+     * para seguir agregando información sin sobrescribir.
      */
     public void guardarReporteDiario(SistemaEstadio sistema) {
 
-        // Generar nombre del archivo con la fecha actual
+        // Se obtiene la fecha actual para construir el nombre del archivo
         String fechaActual = new SimpleDateFormat("ddMMyyyy").format(new Date());
         String nombreArchivo = "reporte_ventas_" + fechaActual + ".txt";
 
-        // Verificar que haya reportes antes de abrir el archivo
+        // Validación: si no hay reportes en la cola, no se genera el archivo
         if (sistema.getTotalReportesEnCola() == 0) {
             System.out.println("No hay reportes pendientes para guardar.");
             return;
         }
 
-        // try-with-resources: cierra el archivo automáticamente al terminar
+        // try-with-resources:
+        // asegura el cierre automático del archivo al finalizar el bloque
         try (PrintWriter writer = new PrintWriter(new FileWriter(nombreArchivo, true))) {
 
+            // Encabezado del reporte diario
             writer.println("========================================");
-            writer.println("  REPORTE DE VENTAS - " + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+            writer.println("  REPORTE DE VENTAS - " +
+                    new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
             writer.println("========================================");
 
+            // Variables acumuladoras para el resumen final
             int totalBoletos = 0;
             double totalIngresos = 0.0;
 
-            // Desencolar FIFO y escribir cada reporte
+            // Procesamiento de la cola (FIFO):
+            // se van extrayendo los reportes uno por uno
             while (sistema.getTotalReportesEnCola() > 0) {
+
                 ReporteVenta reporte = sistema.extraerReporte();
+
                 if (reporte != null) {
+                    // Se escribe cada reporte en el archivo
                     writer.println(reporte.toLineaArchivo());
+
+                    // Se actualizan los totales
                     totalBoletos++;
                     totalIngresos += reporte.getTotalGenerado();
                 }
             }
 
-            // Resumen al final del bloque
+            // Resumen final del reporte diario
             writer.println("----------------------------------------");
             writer.println("Total boletos vendidos : " + totalBoletos);
             writer.println("Ingreso total generado : $" + String.format("%.2f", totalIngresos));
             writer.println("--- FIN DEL REPORTE ---");
             writer.println();
 
+            // Confirmación en consola
             System.out.println("Reporte guardado exitosamente en: " + nombreArchivo);
 
         } catch (IOException e) {
+            // Manejo de errores en caso de fallo al escribir el archivo
             System.err.println("Error al escribir el archivo: " + e.getMessage());
         }
     }
 
     /**
-     * Muestra en consola los reportes guardados (útil para depuración).
+     * Método auxiliar para mostrar en consola el nombre del archivo del día.
+     * Útil para depuración o verificación rápida.
      */
     public void mostrarNombreArchivo() {
         String fechaActual = new SimpleDateFormat("ddMMyyyy").format(new Date());
