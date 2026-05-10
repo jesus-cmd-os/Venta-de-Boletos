@@ -17,15 +17,6 @@ import java.util.List;
 public class PanelControl extends JPanel {
 
     // ── Colores ───────────────────────────────────────────────────────────────
-    private static final Color C_FONDO   = new Color(28,  35,  45);
-    private static final Color C_PANEL   = new Color(38,  48,  60);
-    private static final Color C_BORDE   = new Color(55,  70,  88);
-    private static final Color C_ACENTO  = new Color(52, 152, 219);
-    private static final Color C_VIP     = new Color(24,  95, 165);
-    private static final Color C_PREF    = new Color(15, 110,  86);
-    private static final Color C_GEN     = new Color(95,  94,  90);
-    private static final Color C_VERDE   = new Color(46, 204, 113);
-    private static final Color C_AMARILLO= new Color(241,196,  15);
 
     // ── Componentes — sección selección ──────────────────────────────────────
     private JLabel  lblContador;
@@ -42,7 +33,7 @@ public class PanelControl extends JPanel {
     // ─────────────────────────────────────────────────────────────────────────
     public PanelControl() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(C_FONDO);
+        setBackground(EstiloUI.C_FONDO);
         setPreferredSize(new Dimension(260, 0));
 
         add(crearCardSeleccion());
@@ -62,7 +53,7 @@ public class PanelControl extends JPanel {
 
         // Título
         lblContador = new JLabel("Seleccionados: 0 / 6");
-        lblContador.setFont(new Font("Arial", Font.BOLD, 12));
+        lblContador.setFont(EstiloUI.fuente(Font.BOLD, 12));
         lblContador.setForeground(Color.WHITE);
 
         // Lista de ítems (dinámica)
@@ -72,18 +63,18 @@ public class PanelControl extends JPanel {
 
         JScrollPane scroll = new JScrollPane(panelItems);
         scroll.setPreferredSize(new Dimension(240, 145));
-        scroll.setBorder(BorderFactory.createLineBorder(C_BORDE));
+        scroll.setBorder(BorderFactory.createLineBorder(EstiloUI.C_BORDE));
         scroll.getViewport().setBackground(new Color(22, 28, 36));
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         // Subtotal
         JPanel footerSel = new JPanel(new BorderLayout());
-        footerSel.setBackground(C_PANEL);
-        footerSel.setBorder(new MatteBorder(1, 0, 0, 0, C_BORDE));
+        footerSel.setBackground(EstiloUI.C_PANEL);
+        footerSel.setBorder(new MatteBorder(1, 0, 0, 0, EstiloUI.C_BORDE));
 
         lblSubtotal = new JLabel("Subtotal: $0");
-        lblSubtotal.setFont(new Font("Arial", Font.BOLD, 13));
-        lblSubtotal.setForeground(C_AMARILLO);
+        lblSubtotal.setFont(EstiloUI.fuente(Font.BOLD, 13));
+        lblSubtotal.setForeground(EstiloUI.C_AMARILLO);
         lblSubtotal.setBorder(new EmptyBorder(6, 0, 0, 0));
 
         footerSel.add(lblSubtotal, BorderLayout.CENTER);
@@ -126,7 +117,7 @@ public class PanelControl extends JPanel {
     private void mostrarVacio() {
         panelItems.removeAll();
         JLabel empty = new JLabel("  Ningún asiento seleccionado");
-        empty.setFont(new Font("Arial", Font.ITALIC, 11));
+        empty.setFont(EstiloUI.fuente(Font.ITALIC, 11));
         empty.setForeground(new Color(100, 115, 130));
         empty.setBorder(new EmptyBorder(8, 4, 8, 4));
         panelItems.add(empty);
@@ -142,17 +133,17 @@ public class PanelControl extends JPanel {
 
         // Punto de color según categoría
         JLabel dot = new JLabel("●");
-        dot.setFont(new Font("Arial", Font.PLAIN, 10));
+        dot.setFont(EstiloUI.fuente(Font.PLAIN, 10));
         dot.setForeground(colorCategoria(item.tipo));
 
         // Texto del asiento
         JLabel info = new JLabel(" " + item.seatId + "  (" + abrevTipo(item.tipo) + ")");
-        info.setFont(new Font("Arial", Font.PLAIN, 11));
+        info.setFont(EstiloUI.fuente(Font.PLAIN, 11));
         info.setForeground(Color.WHITE);
 
         // Precio
         JLabel precio = new JLabel("$" + String.format("%,.0f", (double) item.precio));
-        precio.setFont(new Font("Arial", Font.BOLD, 11));
+        precio.setFont(EstiloUI.fuente(Font.BOLD, 11));
         precio.setForeground(new Color(100, 200, 255));
 
         JPanel izq = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -173,16 +164,16 @@ public class PanelControl extends JPanel {
         card.setLayout(new GridLayout(3, 1, 0, 4));
 
         JLabel titulo = new JLabel("Ventas del día");
-        titulo.setFont(new Font("Arial", Font.BOLD, 12));
+        titulo.setFont(EstiloUI.fuente(Font.BOLD, 12));
         titulo.setForeground(Color.WHITE);
 
         lblVendidos = new JLabel("Boletos vendidos: 0");
-        lblVendidos.setFont(new Font("Arial", Font.PLAIN, 12));
-        lblVendidos.setForeground(C_VERDE);
+        lblVendidos.setFont(EstiloUI.fuente(Font.PLAIN, 12));
+        lblVendidos.setForeground(EstiloUI.C_VERDE);
 
         lblIngresos = new JLabel("Ingresos totales: $0.00");
-        lblIngresos.setFont(new Font("Arial", Font.PLAIN, 12));
-        lblIngresos.setForeground(C_VERDE);
+        lblIngresos.setFont(EstiloUI.fuente(Font.PLAIN, 12));
+        lblIngresos.setForeground(EstiloUI.C_VERDE);
 
         card.add(titulo);
         card.add(lblVendidos);
@@ -199,19 +190,19 @@ public class PanelControl extends JPanel {
         card.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel titulo = new JLabel("Historial de compras");
-        titulo.setFont(new Font("Arial", Font.BOLD, 12));
+        titulo.setFont(EstiloUI.fuente(Font.BOLD, 12));
         titulo.setForeground(Color.WHITE);
 
         areaHistorial = new JTextArea();
         areaHistorial.setEditable(false);
-        areaHistorial.setFont(new Font("Monospaced", Font.PLAIN, 10));
+        areaHistorial.setFont(EstiloUI.fuenteMono(Font.PLAIN, 10));
         areaHistorial.setBackground(new Color(22, 28, 36));
         areaHistorial.setForeground(new Color(180, 195, 210));
         areaHistorial.setBorder(new EmptyBorder(4, 6, 4, 6));
 
         JScrollPane scroll = new JScrollPane(areaHistorial);
         scroll.setPreferredSize(new Dimension(240, 130));
-        scroll.setBorder(BorderFactory.createLineBorder(C_BORDE));
+        scroll.setBorder(BorderFactory.createLineBorder(EstiloUI.C_BORDE));
         scroll.getViewport().setBackground(new Color(22, 28, 36));
 
         card.add(titulo, BorderLayout.NORTH);
@@ -222,9 +213,9 @@ public class PanelControl extends JPanel {
     // ── Card base ─────────────────────────────────────────────────────────────
     private JPanel baseCard() {
         JPanel c = new JPanel();
-        c.setBackground(C_PANEL);
+        c.setBackground(EstiloUI.C_PANEL);
         c.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(C_BORDE, 1, true),
+                BorderFactory.createLineBorder(EstiloUI.C_BORDE, 1, true),
                 new EmptyBorder(10, 10, 10, 10)));
         c.setAlignmentX(Component.LEFT_ALIGNMENT);
         c.setMaximumSize(new Dimension(260, Integer.MAX_VALUE));
@@ -246,9 +237,9 @@ public class PanelControl extends JPanel {
     // ── Helpers privados ──────────────────────────────────────────────────────
     private Color colorCategoria(String tipo) {
         switch (tipo) {
-            case "VIP":          return C_VIP;
-            case "Preferencial": return C_PREF;
-            default:             return C_GEN;
+            case "VIP":          return EstiloUI.C_VIP;
+            case "Preferencial": return EstiloUI.C_PREF;
+            default:             return EstiloUI.C_GEN;
         }
     }
 

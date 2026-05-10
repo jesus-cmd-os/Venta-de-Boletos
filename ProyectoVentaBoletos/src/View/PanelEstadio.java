@@ -31,13 +31,6 @@ public class PanelEstadio extends JPanel {
     private static final int MAX_BOLETOS = 6;
 
     // ── Colores ───────────────────────────────────────────────────────────────
-    private static final Color C_VIP     = new Color(24,  95, 165);
-    private static final Color C_PREF    = new Color(15, 110,  86);
-    private static final Color C_GEN     = new Color(95,  94,  90);
-    private static final Color C_OCUPADO = new Color(123, 45,  45);
-    private static final Color C_SELEC   = new Color(241, 196,  15);
-    private static final Color C_PANEL   = new Color(38,  48,  60);
-    private static final Color C_ACENTO  = new Color(52, 152, 219);
 
     // ── Tamaño de cada botón ──────────────────────────────────────────────────
     private static final int SW  = 24;
@@ -75,9 +68,9 @@ public class PanelEstadio extends JPanel {
     // ── Construcción principal ────────────────────────────────────────────────
     private void construirPanel() {
         setLayout(new BorderLayout(GAP, GAP));
-        setBackground(C_PANEL);
+        setBackground(EstiloUI.C_PANEL);
         setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(C_ACENTO, 2),
+                BorderFactory.createLineBorder(EstiloUI.C_ACENTO, 2),
                 new EmptyBorder(12, 12, 12, 12)));
 
         add(crearTribunaNorte(), BorderLayout.NORTH);
@@ -94,7 +87,7 @@ public class PanelEstadio extends JPanel {
         p.setBorder(BorderFactory.createLineBorder(new Color(22, 120, 60), 4));
         p.setPreferredSize(new Dimension(180, 120));
         JLabel lbl = new JLabel("CANCHA", SwingConstants.CENTER);
-        lbl.setFont(new Font("Arial", Font.BOLD, 22));
+        lbl.setFont(EstiloUI.fuente(Font.BOLD, 22));
         lbl.setForeground(new Color(200, 240, 200));
         p.add(lbl, BorderLayout.CENTER);
         return p;
@@ -107,14 +100,14 @@ public class PanelEstadio extends JPanel {
         int filas   = filaFin + 1;
 
         JPanel wrap = new JPanel(new BorderLayout(0, 2));
-        wrap.setBackground(C_PANEL);
+        wrap.setBackground(EstiloUI.C_PANEL);
 
         JLabel lbl = new JLabel("Tribuna Norte", SwingConstants.CENTER);
-        lbl.setFont(new Font("Arial", Font.BOLD, 10));
+        lbl.setFont(EstiloUI.fuente(Font.BOLD, 10));
         lbl.setForeground(new Color(120, 135, 150));
 
         JPanel grid = new JPanel(new GridLayout(filas, colTot, GAP, GAP));
-        grid.setBackground(C_PANEL);
+        grid.setBackground(EstiloUI.C_PANEL);
 
         for (int i = 0; i <= filaFin; i++) {
             for (int j = 0; j < colTot; j++) {
@@ -137,14 +130,14 @@ public class PanelEstadio extends JPanel {
         int filas      = totalFilas - filaIni;
 
         JPanel wrap = new JPanel(new BorderLayout(0, 2));
-        wrap.setBackground(C_PANEL);
+        wrap.setBackground(EstiloUI.C_PANEL);
 
         JLabel lbl = new JLabel("Tribuna Sur", SwingConstants.CENTER);
-        lbl.setFont(new Font("Arial", Font.BOLD, 10));
+        lbl.setFont(EstiloUI.fuente(Font.BOLD, 10));
         lbl.setForeground(new Color(120, 135, 150));
 
         JPanel grid = new JPanel(new GridLayout(filas, colTot, GAP, GAP));
-        grid.setBackground(C_PANEL);
+        grid.setBackground(EstiloUI.C_PANEL);
 
         for (int i = filaIni; i < totalFilas; i++) {
             for (int j = 0; j < colTot; j++) {
@@ -168,14 +161,14 @@ public class PanelEstadio extends JPanel {
         int cols    = colFin + 1;
 
         JPanel wrap = new JPanel(new BorderLayout(2, 0));
-        wrap.setBackground(C_PANEL);
+        wrap.setBackground(EstiloUI.C_PANEL);
 
         JLabel lbl = new JLabel("Oeste", SwingConstants.CENTER);
-        lbl.setFont(new Font("Arial", Font.BOLD, 10));
+        lbl.setFont(EstiloUI.fuente(Font.BOLD, 10));
         lbl.setForeground(new Color(120, 135, 150));
 
         JPanel grid = new JPanel(new GridLayout(filas, cols, GAP, GAP));
-        grid.setBackground(C_PANEL);
+        grid.setBackground(EstiloUI.C_PANEL);
 
         for (int i = filaIni; i <= filaFin; i++) {
             for (int j = 0; j <= colFin; j++) {
@@ -200,14 +193,14 @@ public class PanelEstadio extends JPanel {
         int cols    = colTot - colIni;
 
         JPanel wrap = new JPanel(new BorderLayout(2, 0));
-        wrap.setBackground(C_PANEL);
+        wrap.setBackground(EstiloUI.C_PANEL);
 
         JLabel lbl = new JLabel("Este", SwingConstants.CENTER);
-        lbl.setFont(new Font("Arial", Font.BOLD, 10));
+        lbl.setFont(EstiloUI.fuente(Font.BOLD, 10));
         lbl.setForeground(new Color(120, 135, 150));
 
         JPanel grid = new JPanel(new GridLayout(filas, cols, GAP, GAP));
-        grid.setBackground(C_PANEL);
+        grid.setBackground(EstiloUI.C_PANEL);
 
         for (int i = filaIni; i <= filaFin; i++) {
             for (int j = colIni; j < colTot; j++) {
@@ -229,19 +222,14 @@ public class PanelEstadio extends JPanel {
         String   cat     = zonaToString(zona);
         double   precio  = sistema.getMapaPrecios().getOrDefault(cat, 0.0);
 
-        JButton btn = new JButton();
-        btn.setPreferredSize(new Dimension(SW, SH));
-        btn.setMinimumSize(new Dimension(SW, SH));
-        btn.setMaximumSize(new Dimension(SW, SH));
-        btn.setFocusPainted(false);
-        btn.setBorderPainted(false);
+        // EstiloUI.botonAsiento pinta el fondo correctamente en Mac y Windows
+        Color colorInicial = ocupado ? EstiloUI.EstiloUI.C_OCUPADO : colorZona(zona);
+        JButton btn = EstiloUI.botonAsiento(colorInicial, SW, SH);
         btn.setToolTipText(cat + "  F" + fila + "-A" + col + "  $" + String.format("%.0f", precio));
 
         if (ocupado) {
-            btn.setBackground(C_OCUPADO);
             btn.setEnabled(false);
         } else {
-            btn.setBackground(colorZona(zona));
             btn.addActionListener(e -> seleccionarAsiento(fila, col, btn));
         }
         return btn;
@@ -254,6 +242,7 @@ public class PanelEstadio extends JPanel {
         if (asientosSeleccionados.contains(p)) {
             asientosSeleccionados.remove(p);
             btn.setBackground(colorZona(sistema.getMatrizZonas()[fila][col]));
+            btn.repaint();
         } else {
             if (asientosSeleccionados.size() >= MAX_BOLETOS) {
                 JOptionPane.showMessageDialog(this,
@@ -262,7 +251,8 @@ public class PanelEstadio extends JPanel {
                 return;
             }
             asientosSeleccionados.add(p);
-            btn.setBackground(C_SELEC);
+            btn.setBackground(EstiloUI.EstiloUI.C_SELEC);
+            btn.repaint();
         }
 
         // ── Notificar a PanelControl en tiempo real ───────────────────────────
@@ -280,7 +270,7 @@ public class PanelEstadio extends JPanel {
         for (Point p : asientosSeleccionados) {
             TipoZona zona  = sistema.getMatrizZonas()[p.x][p.y];
             String   tipo  = zonaToString(zona);
-            int precio = (int) sistema.getMapaPrecios().getOrDefault(tipo, 0.0).doubleValue();
+            int      precio = sistema.getMapaPrecios().getOrDefault(tipo, 0.0).intValue();
             String   id    = tipo.substring(0, 1) + "-F" + p.x + "-A" + p.y;
             items.add(new PanelControl.SeatItem(id, tipo, precio));
         }
@@ -292,7 +282,7 @@ public class PanelEstadio extends JPanel {
         for (Point p : puntos) {
             JButton btn = botonesAsientos[p.x][p.y];
             if (btn != null) {
-                btn.setBackground(C_OCUPADO);
+                btn.setBackground(EstiloUI.EstiloUI.C_OCUPADO);
                 btn.setEnabled(false);
             }
         }
@@ -303,9 +293,9 @@ public class PanelEstadio extends JPanel {
     // ── Helpers ───────────────────────────────────────────────────────────────
     private Color colorZona(TipoZona zona) {
         switch (zona) {
-            case VIP:          return C_VIP;
-            case PREFERENCIAL: return C_PREF;
-            default:           return C_GEN;
+            case VIP:          return EstiloUI.EstiloUI.C_VIP;
+            case PREFERENCIAL: return EstiloUI.EstiloUI.C_PREF;
+            default:           return EstiloUI.EstiloUI.C_GEN;
         }
     }
 
