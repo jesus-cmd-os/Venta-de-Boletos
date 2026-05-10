@@ -17,7 +17,7 @@ import java.awt.*;
  */
 public class EstiloUI {
 
-    // ── Colores del sistema ───────────────────────────────────────────────────
+    // Colores del sistema
     public static final Color C_VIP      = new Color(24,  95, 165);
     public static final Color C_PREF     = new Color(15, 110,  86);
     public static final Color C_GEN      = new Color(95,  94,  90);
@@ -31,12 +31,12 @@ public class EstiloUI {
     public static final Color C_AMARILLO = new Color(241, 196,  15);
     public static final Color C_CANCHA   = new Color(39, 174,  96);
 
-    // ── ¿Estamos en Mac? ─────────────────────────────────────────────────────
+    //  Mac
     public static final boolean ES_MAC =
             System.getProperty("os.name", "").toLowerCase().contains("mac");
     public static EstiloUI EstiloUI;
 
-    // ─────────────────────────────────────────────────────────────────────────
+    //
     /**
      * Inicializa el Look and Feel y propiedades globales.
      * Llamar UNA sola vez en ProyectoVentaBoletos.main() antes de crear la ventana.
@@ -71,7 +71,6 @@ public class EstiloUI {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     /**
      * Fuente segura multiplataforma.
      * Arial existe en Windows; en Mac puede no estar → fallback a Helvetica Neue / SansSerif.
@@ -102,7 +101,6 @@ public class EstiloUI {
         return tamano; // Java 2D ya maneja el scaling en Retina desde Java 9+
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     /**
      * Crea un botón con color de fondo garantizado en Windows y Mac.
      *
@@ -158,7 +156,6 @@ public class EstiloUI {
         return btn;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     /**
      * Crea un botón de asiento (pequeño) compatible con Mac y Windows.
      */
@@ -195,7 +192,6 @@ public class EstiloUI {
         return btn;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     /**
      * Panel con fondo garantizado (setOpaque(true) explícito para Mac).
      */
@@ -206,7 +202,6 @@ public class EstiloUI {
         return p;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     /**
      * Calcula el tamaño inicial de la ventana principal.
      * En Mac resta la altura de la barra de menú del sistema (~22px) y el dock.
@@ -218,7 +213,6 @@ public class EstiloUI {
         return new Dimension(ancho, alto);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
     /**
      * Label con fuente segura y color.
      */

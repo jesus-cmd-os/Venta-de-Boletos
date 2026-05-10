@@ -12,3 +12,43 @@ Total boletos vendidos : 6
 Ingreso total generado : $9000,00
 --- FIN DEL REPORTE ---
 
+========================================
+  REPORTE DE VENTAS - 10/05/2026 12:26:51
+========================================
+[10/05/2026 12:26:49] Boleto: F453EC0F   | Categoría: Preferencial | Asiento: Fila 3, Asiento 12 | Total: $800,00
+[10/05/2026 12:26:49] Boleto: 3838451E   | Categoría: Preferencial | Asiento: Fila 2, Asiento 10 | Total: $800,00
+[10/05/2026 12:26:49] Boleto: 5300887C   | Categoría: VIP          | Asiento: Fila 3, Asiento 6 | Total: $1500,00
+[10/05/2026 12:26:49] Boleto: 5CE691A2   | Categoría: VIP          | Asiento: Fila 1, Asiento 9 | Total: $1500,00
+----------------------------------------
+Total boletos vendidos : 4
+Ingreso total generado : $4600,00
+--- FIN DEL REPORTE ---
+
+========================================
+  REPORTE DE VENTAS - 10/05/2026 12:42:06
+========================================
+[10/05/2026 12:42:04] Boleto: 6FA284EC   | Categoria: VIP          | Asiento: Fila 3, Asiento 8    | Total: $1500,00
+[10/05/2026 12:42:04] Boleto: 8A1CE25F   | Categoria: General      | Asiento: Fila 1, Asiento 12   | Total: $400,00
+[10/05/2026 12:42:04] Boleto: 0BF4DEB0   | Categoria: VIP          | Asiento: Fila 6, Asiento 9    | Total: $1500,00
+[10/05/2026 12:42:04] Boleto: 55F40DE7   | Categoria: VIP          | Asiento: Fila 4, Asiento 8    | Total: $1500,00
+[10/05/2026 12:42:04] Boleto: A092AAD9   | Categoria: VIP          | Asiento: Fila 8, Asiento 5    | Total: $1500,00
+[10/05/2026 12:42:04] Boleto: A5F3295D   | Categoria: VIP          | Asiento: Fila 6, Asiento 5    | Total: $1500,00
+----------------------------------------
+Total boletos vendidos : 6
+Ingreso total generado : $7900,00
+--- FIN DEL REPORTE ---
+
+========================================
+  REPORTE DE VENTAS - 10/05/2026 12:52:29
+========================================
+[10/05/2026 12:52:28] Boleto: 25735E79   | Categoria: VIP          | Asiento: Fila 3, Asiento 9    | Total: $1500,00
+[10/05/2026 12:52:28] Boleto: 96272C44   | Categoria: VIP          | Asiento: Fila 3, Asiento 7    | Total: $1500,00
+[10/05/2026 12:52:28] Boleto: 091EA4F0   | Categoria: VIP          | Asiento: Fila 3, Asiento 5    | Total: $1500,00
+[10/05/2026 12:52:28] Boleto: 906FA4F0   | Categoria: VIP          | Asiento: Fila 8, Asiento 7    | Total: $1500,00
+[10/05/2026 12:52:28] Boleto: 2661DDD8   | Categoria: VIP          | Asiento: Fila 11, Asiento 9   | Total: $1500,00
+[10/05/2026 12:52:28] Boleto: 3C948FF0   | Categoria: Preferencial | Asiento: Fila 11, Asiento 10  | Total: $800,00
+----------------------------------------
+Total boletos vendidos : 6
+Ingreso total generado : $8300,00
+--- FIN DEL REPORTE ---
+

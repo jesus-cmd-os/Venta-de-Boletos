@@ -9,84 +9,85 @@ import service.SistemaEstadio;
 import model.ReporteVenta;
 
 /**
- * Clase encargada de la persistencia en archivos de texto.
- * Su función principal es generar un archivo diario con los reportes de ventas.
- * Los reportes se obtienen desde una cola (estructura FIFO) dentro del sistema.
+ * GestorArchivos — Capa de persistencia del sistema.
+ *
+ * Responsabilidad única: tomar los reportes de venta acumulados en
+ * la Cola FIFO de SistemaEstadio y escribirlos en un archivo .txt.
+ *
+ * Características del archivo generado:
+ *   - Nombre con fecha del día: reporte_ventas_ddMMyyyy.txt
+ *   - Si ya existe (misma fecha), se agregan registros al final (append)
+ *   - Incluye encabezado, detalle de cada venta y resumen con totales
+ *
+ * El archivo se cierra automáticamente gracias a try-with-resources,
+ * lo que evita fugas de recursos incluso si ocurre un error.
  */
 public class GestorArchivos {
 
     /**
-     * Guarda todos los reportes acumulados en la cola en un archivo físico.
-     * El archivo se genera con la fecha actual en su nombre:
-     * formato -> reporte_ventas_ddMMyyyy.txt
+     * Desencola todos los ReporteVenta pendientes de la Cola FIFO
+     * y los escribe en el archivo .txt del día.
      *
-     * Si el archivo ya existe (mismo día), se abre en modo append
-     * para seguir agregando información sin sobrescribir.
+     * Flujo del método:
+     *   1. Genera el nombre del archivo con la fecha actual
+     *   2. Valida que haya reportes pendientes (evita crear archivos vacíos)
+     *   3. Abre el archivo en modo append (true) para no sobrescribir el día
+     *   4. Escribe el encabezado con fecha/hora del momento del guardado
+     *   5. Desencola cada ReporteVenta en orden FIFO y escribe su línea
+     *   6. Escribe el resumen con totales de boletos e ingresos
+     *   7. Cierra el archivo automáticamente (try-with-resources)
+     *
+     * @param sistema Instancia del sistema del estadio que contiene la Cola FIFO
      */
     public void guardarReporteDiario(SistemaEstadio sistema) {
 
-        // Se obtiene la fecha actual para construir el nombre del archivo
-        String fechaActual = new SimpleDateFormat("ddMMyyyy").format(new Date());
+        // Paso 1: Nombre del archivo basado en la fecha actual del sistema
+        String fechaActual  = new SimpleDateFormat("ddMMyyyy").format(new Date());
         String nombreArchivo = "reporte_ventas_" + fechaActual + ".txt";
 
-        // Validación: si no hay reportes en la cola, no se genera el archivo
+        // Paso 2: Validación preventiva — no crear archivo si la cola está vacía
         if (sistema.getTotalReportesEnCola() == 0) {
             System.out.println("No hay reportes pendientes para guardar.");
             return;
         }
 
-        // try-with-resources:
-        // asegura el cierre automático del archivo al finalizar el bloque
+        // Paso 3-7: try-with-resources garantiza cierre del archivo sin importar errores
         try (PrintWriter writer = new PrintWriter(new FileWriter(nombreArchivo, true))) {
 
-            // Encabezado del reporte diario
+            //  Encabezado del bloque de reporte
             writer.println("========================================");
-            writer.println("  REPORTE DE VENTAS - " +
-                    new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
+            writer.println("  REPORTE DE VENTAS - "
+                    + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
             writer.println("========================================");
 
-            // Variables acumuladoras para el resumen final
-            int totalBoletos = 0;
+            //  Variables acumuladoras para el resumen final
+            int    totalBoletos  = 0;
             double totalIngresos = 0.0;
 
-            // Procesamiento de la cola (FIFO):
-            // se van extrayendo los reportes uno por uno
+            //  Desencolar en orden FIFO y escribir cada registro
+            // poll() devuelve y elimina el primer elemento de la cola (FIFO)
+            // El loop continúa hasta vaciar completamente la cola
             while (sistema.getTotalReportesEnCola() > 0) {
-
                 ReporteVenta reporte = sistema.extraerReporte();
-
                 if (reporte != null) {
-                    // Se escribe cada reporte en el archivo
                     writer.println(reporte.toLineaArchivo());
-
-                    // Se actualizan los totales
                     totalBoletos++;
                     totalIngresos += reporte.getTotalGenerado();
                 }
             }
 
-            // Resumen final del reporte diario
+            //  Resumen acumulado del bloque guardado
             writer.println("----------------------------------------");
             writer.println("Total boletos vendidos : " + totalBoletos);
             writer.println("Ingreso total generado : $" + String.format("%.2f", totalIngresos));
             writer.println("--- FIN DEL REPORTE ---");
-            writer.println();
+            writer.println(); // Línea en blanco para separar bloques del mismo día
 
-            // Confirmación en consola
             System.out.println("Reporte guardado exitosamente en: " + nombreArchivo);
 
         } catch (IOException e) {
-            // Manejo de errores en caso de fallo al escribir el archivo
+            // Error al acceder al sistema de archivos (permisos, disco lleno, etc.)
             System.err.println("Error al escribir el archivo: " + e.getMessage());
         }
-    }
-
-    /**
-     * Método auxiliar para mostrar en consola el nombre del archivo del día.
-     * Útil para depuración o verificación rápida.
-     */
-    public void mostrarNombreArchivo() {
-        String fechaActual = new SimpleDateFormat("ddMMyyyy").format(new Date());
-        System.out.println("Archivo del día: reporte_ventas_" + fechaActual + ".txt");
     }
 }

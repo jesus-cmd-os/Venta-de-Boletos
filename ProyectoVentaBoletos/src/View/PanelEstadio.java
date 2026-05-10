@@ -17,33 +17,32 @@ import java.util.List;
  */
 public class PanelEstadio extends JPanel {
 
-    // ── Backend ───────────────────────────────────────────────────────────────
+    // ── Backend
     private final SistemaEstadio sistema;
 
-    // ── Referencia al panel de control (para actualización en tiempo real) ────
+    // ── Referencia al panel de control (para actualización en tiempo real)
     private PanelControl panelControl;
 
-    // ── Matriz visual de botones ──────────────────────────────────────────────
+    // ── Matriz visual de botones
     private JButton[][] botonesAsientos;
 
-    // ── Selección múltiple ────────────────────────────────────────────────────
+    // ── Selección múltiple
     private final List<Point> asientosSeleccionados = new ArrayList<>();
     private static final int MAX_BOLETOS = 6;
 
-    // ── Colores ───────────────────────────────────────────────────────────────
+    // ── Colores
 
-    // ── Tamaño de cada botón ──────────────────────────────────────────────────
+    // ── Tamaño de cada botón
     private static final int SW  = 24;
     private static final int SH  = 18;
     private static final int GAP = 3;
 
-    // ── Límites del bloque central (cancha) ───────────────────────────────────
+    // ── Límites del bloque central (cancha)
     private final int filaCancha1;
     private final int filaCancha2;
     private final int colCancha1;
     private final int colCancha2;
 
-    // ─────────────────────────────────────────────────────────────────────────
     public PanelEstadio(SistemaEstadio sistema) {
         this.sistema = sistema;
 
@@ -65,7 +64,7 @@ public class PanelEstadio extends JPanel {
         this.panelControl = panelControl;
     }
 
-    // ── Construcción principal ────────────────────────────────────────────────
+    //  Construcción principal
     private void construirPanel() {
         setLayout(new BorderLayout(GAP, GAP));
         setBackground(EstiloUI.C_PANEL);
@@ -80,7 +79,7 @@ public class PanelEstadio extends JPanel {
         add(crearTribunaSur(),   BorderLayout.SOUTH);
     }
 
-    // ── Cancha ────────────────────────────────────────────────────────────────
+    //  Cancha
     private JPanel crearCancha() {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(new Color(39, 174, 96));
@@ -93,7 +92,7 @@ public class PanelEstadio extends JPanel {
         return p;
     }
 
-    // ── Tribuna Norte ─────────────────────────────────────────────────────────
+    //  Tribuna Norte
     private JPanel crearTribunaNorte() {
         int colTot  = sistema.getMatrizAsientos()[0].length;
         int filaFin = filaCancha1 - 1;
@@ -122,7 +121,7 @@ public class PanelEstadio extends JPanel {
         return wrap;
     }
 
-    // ── Tribuna Sur ───────────────────────────────────────────────────────────
+    // Tribuna Sur
     private JPanel crearTribunaSur() {
         int totalFilas = sistema.getMatrizAsientos().length;
         int colTot     = sistema.getMatrizAsientos()[0].length;
@@ -152,7 +151,7 @@ public class PanelEstadio extends JPanel {
         return wrap;
     }
 
-    // ── Tribuna Oeste ─────────────────────────────────────────────────────────
+    //  Tribuna Oeste
     private JPanel crearTribunaOeste() {
         int filaIni = filaCancha1;
         int filaFin = filaCancha2;
@@ -183,7 +182,7 @@ public class PanelEstadio extends JPanel {
         return wrap;
     }
 
-    // ── Tribuna Este ──────────────────────────────────────────────────────────
+    // Tribuna Este
     private JPanel crearTribunaEste() {
         int filaIni = filaCancha1;
         int filaFin = filaCancha2;
@@ -215,7 +214,7 @@ public class PanelEstadio extends JPanel {
         return wrap;
     }
 
-    // ── Crear botón individual ────────────────────────────────────────────────
+    //  Crear botón individual
     private JButton crearBoton(int fila, int col) {
         boolean  ocupado = sistema.getMatrizAsientos()[fila][col];
         TipoZona zona    = sistema.getMatrizZonas()[fila][col];
@@ -235,7 +234,7 @@ public class PanelEstadio extends JPanel {
         return btn;
     }
 
-    // ── Lógica de selección ───────────────────────────────────────────────────
+    //  Lógica de selección
     private void seleccionarAsiento(int fila, int col, JButton btn) {
         Point p = new Point(fila, col);
 
@@ -255,7 +254,7 @@ public class PanelEstadio extends JPanel {
             btn.repaint();
         }
 
-        // ── Notificar a PanelControl en tiempo real ───────────────────────────
+        // Notificar a PanelControl en tiempo real
         notificarPanelControl();
     }
 
@@ -277,7 +276,7 @@ public class PanelEstadio extends JPanel {
         panelControl.actualizarSeleccion(items);
     }
 
-    // ── Marcar asientos como ocupados tras confirmar compra ───────────────────
+    //  Marcar asientos como ocupados tras confirmar compra
     public void marcarOcupados(List<Point> puntos) {
         for (Point p : puntos) {
             JButton btn = botonesAsientos[p.x][p.y];
@@ -290,7 +289,7 @@ public class PanelEstadio extends JPanel {
         notificarPanelControl(); // limpia la lista en tiempo real
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
+    //  Helpers
     private Color colorZona(TipoZona zona) {
         switch (zona) {
             case VIP:          return EstiloUI.EstiloUI.C_VIP;
@@ -307,7 +306,7 @@ public class PanelEstadio extends JPanel {
         }
     }
 
-    // ── Getters para VentanaPrincipal ─────────────────────────────────────────
+    //  Getters para VentanaPrincipal
     public List<Point> getAsientosSeleccionados() { return asientosSeleccionados; }
     public JButton[][] getBotonesAsientos()        { return botonesAsientos; }
 }
